@@ -10,6 +10,7 @@ Created on Thu Apr  7 12:25:34 2022
 import pandas as pd
 import geopandas as gpd
 import matplotlib.pyplot as plt
+
 #%% gpkg tracts
 raw = gpd.read_file("Florida_TRACTS.zip")
 miami = raw.query("STCNTY =='12086'")
