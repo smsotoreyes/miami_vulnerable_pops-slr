@@ -12,38 +12,54 @@ import geopandas as gpd
 import matplotlib.pyplot as plt
 import fiona
 
-#%% layers
-##uwhats in these geodatabases
+
+#%% dade
+
 
 dist = 'FL_MFL_slr_data_dist/FL_MFL_slr_final_dist.gdb'
 
 d_layers = fiona.listlayers(dist)
 print( sorted(d_layers) )
 
-#%%
-dist_3 = 'FL_MFL2_slr_3ft'
-dist_h = gpd.read_file(dist,layer=dist_3)
+slr_list = ['FL_MFL1_low_0ft', 'FL_MFL1_low_10ft', 'FL_MFL1_low_1ft',
+             'FL_MFL1_low_2ft', 'FL_MFL1_low_3ft', 'FL_MFL1_low_4ft', 
+             'FL_MFL1_low_5ft', 'FL_MFL1_low_6ft', 'FL_MFL1_low_7ft', 
+             'FL_MFL1_low_8ft', 'FL_MFL1_low_9ft', 'FL_MFL1_slr_0ft', 
+             'FL_MFL1_slr_10ft', 'FL_MFL1_slr_1ft', 'FL_MFL1_slr_2ft', 
+             'FL_MFL1_slr_3ft', 'FL_MFL1_slr_4ft', 'FL_MFL1_slr_5ft', 
+             'FL_MFL1_slr_6ft', 'FL_MFL1_slr_7ft', 'FL_MFL1_slr_8ft', 
+             'FL_MFL1_slr_9ft', 'FL_MFL2_low_0ft', 'FL_MFL2_low_10ft', 
+             'FL_MFL2_low_1ft', 'FL_MFL2_low_2ft', 'FL_MFL2_low_3ft', 
+             'FL_MFL2_low_4ft', 'FL_MFL2_low_5ft', 'FL_MFL2_low_6ft', 
+             'FL_MFL2_low_7ft', 'FL_MFL2_low_8ft', 'FL_MFL2_low_9ft', 
+             'FL_MFL2_slr_0ft', 'FL_MFL2_slr_10ft', 'FL_MFL2_slr_1ft', 
+             'FL_MFL2_slr_2ft', 'FL_MFL2_slr_3ft', 'FL_MFL2_slr_4ft', 
+             'FL_MFL2_slr_5ft', 'FL_MFL2_slr_6ft', 'FL_MFL2_slr_7ft', 
+             'FL_MFL2_slr_8ft', 'FL_MFL2_slr_9ft']
 
-print( len(dist_h) )
-print( dist_h.columns )
-print( dist_h.crs )
+for s in slr_list:
+    if not s.startswith('FL_MFL2_'):
+        continue
+    scenarios = gpd.read_file(dist,layer=s)
+    print( len(scenarios) )
+    print( scenarios.columns )
+    print( scenarios.crs )
+      
+          
+    scenarios = scenarios.to_crs(epsg=32617)
+    
+    tracts = gpd.read_file('Florida_TRACTS.zip')
+    md = tracts.query("STCNTY =='12086'")
+    md = md.to_crs(epsg=32617)
+        
 
-
-dist_h = dist_h.to_crs(epsg=32617)
-
-dade = gpd.read_file('Florida_TRACTS.zip')
-md = dade.query("STCNTY =='12086'")
-md = md.to_crs(epsg=32617)
-           
-#%%          
 fig,ax1 = plt.subplots(dpi=300)
 md.boundary.plot(color='black',linewidth=0.5,ax=ax1)
-dist_h.plot(ax=ax1)
-fig.savefig(dist_3+'.png')
+scenarios.plot(ax=ax1)
+fig.savefig(f"{s}.png")
 ax1.axis('off')
 
-
-
+scenarios.to_file("slr_scenarios.gpkg", layer = 'scenarios', index=False)
 
 
 
