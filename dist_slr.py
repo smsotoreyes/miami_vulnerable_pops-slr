@@ -53,11 +53,10 @@ for s in slr_list:
     md = md.to_crs(epsg=32617)
         
 
-fig,ax1 = plt.subplots(dpi=300)
-md.boundary.plot(color='black',linewidth=0.5,ax=ax1)
-scenarios.plot(ax=ax1)
-fig.savefig(f"{s}.png")
-ax1.axis('off')
+##fig,ax1 = plt.subplots(dpi=300)
+####senarios.plot(ax=ax1)
+##fig.savefig(f"{s}.png")
+##ax1.axis('off')
 
 scenarios.to_file("slr_scenarios.gpkg", layer = 'scenarios', index=False)
 
