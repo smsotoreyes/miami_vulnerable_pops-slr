@@ -11,6 +11,7 @@ Created on Tue Apr 26 12:08:32 2022
 import pandas as pd
 import geopandas as gpd
 import matplotlib.pyplot as plt
+import os
 
 #%% spatial join (slr onto tract)
 
@@ -25,4 +26,17 @@ water = water.dissolve()
 
 merged = tract.sjoin(water, how="left", predicate="intersects")
 
+out_file = merged.copy()
+
+if os.path.exists(out_file):
+    os.remove(out_file)
+
 merged.to_file("joined.gpkg",layer="slr2",index=False)
+
+#%% cengtroids
+
+tracts = gpd.read_file('joined.gpkg')
+
+centroids = tracts.copy()
+centroids['geometry'] = tracts.centroid
+centroids.to_file(tracts,layer='centroids',index=False)
