@@ -37,28 +37,42 @@ slr_list = ['FL_MFL1_low_0ft', 'FL_MFL1_low_10ft', 'FL_MFL1_low_1ft',
              'FL_MFL2_slr_5ft', 'FL_MFL2_slr_6ft', 'FL_MFL2_slr_7ft', 
              'FL_MFL2_slr_8ft', 'FL_MFL2_slr_9ft']
 
-for s in slr_list:
-    if not s.startswith('FL_MFL2_'):
-        continue
-    scenarios = gpd.read_file(dist,layer=s)
-    print( len(scenarios) )
-    print( scenarios.columns )
-    print( scenarios.crs )
+#%% flood layers >> pull out layers
+
+runs = ['FL_MFL2_low_2ft', 'FL_MFL2_slr_2ft', 'FL_MFL2_low_6ft', 'FL_MFL2_slr_6ft' ]
+
+for r in runs:
+    scenario = gpd.read_file(dist, layer=r)
+    scenario = scenario.to_crs(epsg=32617)
+    scenario.to_file('flood_layers.gpkg', layer=r, index=False)
+    
+
+
+
+
+#%%
+
+# for s in slr_list:
+#     if not s.startswith('FL_MFL2_'):
+#         continue
+#     scenarios = gpd.read_file(dist,layer=s)
+#     print( len(scenarios) )
+#     print( scenarios.columns )
+#     print( scenarios.crs )
       
           
-    scenarios = scenarios.to_crs(epsg=32617)
+#     scenarios = scenarios.to_crs(epsg=32617)
     
-    tracts = gpd.read_file('Florida_TRACTS.zip')
-    md = tracts.query("STCNTY =='12086'")
-    md = md.to_crs(epsg=32617)
+#     tracts = gpd.read_file('Florida_TRACTS.zip')
+#     md = tracts.query("STCNTY =='12086'")
+#     md = md.to_crs(epsg=32617)
         
+# fig,ax1 = plt.subplots(dpi=300)
+# scenarios.plot(ax=ax1)
+# fig.savefig(f"{s}.png")
+# ax1.axis('off')
 
-##fig,ax1 = plt.subplots(dpi=300)
-####senarios.plot(ax=ax1)
-##fig.savefig(f"{s}.png")
-##ax1.axis('off')
-
-scenarios.to_file("slr_scenarios.gpkg", layer = 'scenarios', index=False)
+# scenarios.to_file("slr_scenarios.gpkg", layer = 'scenarios', index=False)
 
 
 
