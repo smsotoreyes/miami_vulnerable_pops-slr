@@ -4,11 +4,13 @@
 Created on Sat Apr 23 18:42:48 2022
 
 @author: sofia
+Build a customized vulnerability index layer 
 """
 
 import pandas as pd
 import geopandas as gpd
 import matplotlib.pyplot as plt
+import os
 
 #%% gpkg tracts
 ## understanding columns in SVI index
@@ -16,6 +18,8 @@ import matplotlib.pyplot as plt
 raw = gpd.read_file("Florida_TRACTS.zip")
 miami = raw.query("STCNTY =='12086'")
 print("\nColumns:", list(miami.columns))
+
+out_file = "miami.gpkg"
 
 #%% SVI layers
 
@@ -47,6 +51,9 @@ for v in var_list:
 
 ## creating geopackage layer of chosen vulnerability indicators (eliminated high occupancy buildings (multiunit)
 ## and limited english (limeng)
+
+if os.path.exists(out_file):
+    os.remove(out_file)
 
 flag_list = ['F_THEME1',
              'F_THEME2',

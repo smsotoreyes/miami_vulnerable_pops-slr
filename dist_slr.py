@@ -4,6 +4,7 @@
 Created on Wed Apr 20 21:18:12 2022
 
 @author: sofia
+Build a SLR scenarios geopackage layer
 """
 #%% modules
 
@@ -11,8 +12,9 @@ import pandas as pd
 import geopandas as gpd
 import matplotlib.pyplot as plt
 import fiona
+import os
 
-
+out_file = "flood_layers.gpkg"
 #%% dade
 
 ##unstacking columns in raw NOAA slr data 
@@ -41,6 +43,9 @@ slr_list = ['FL_MFL1_low_0ft', 'FL_MFL1_low_10ft', 'FL_MFL1_low_1ft',
 #%% flood layers
 
 ## creating geopackage of relevant layers for analysis 
+
+if os.path.exists(out_file):
+    os.remove(out_file)
 
 runs = ['FL_MFL2_low_2ft', 'FL_MFL2_slr_2ft',
         'FL_MFL2_low_4ft', 'FL_MFL2_slr_4ft',]

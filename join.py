@@ -4,9 +4,10 @@
 Created on Tue Apr 26 12:08:32 2022
 
 @author: sofia
+Create a layer with centroids to indicate flooding (1,0) then join onto MDC by tract file
 """
 
-## this script takes 10 minutes to run
+## FYI: this script takes 10 minutes to run!
 
 #%% modules
 
@@ -39,6 +40,5 @@ for r in layers:
     merged['geometry'] = merged['geometry'].centroid
     merged.to_file(out_file, layer=r, index=False)
 
-#%%
 
 

@@ -3,6 +3,7 @@ centroids-combined.py
 May 2022 PJW
 Build a combined file with flooded centroids from different scenarios.
 """
+#%% modules
 
 import geopandas as gpd
 import os
@@ -44,7 +45,7 @@ print( combined[layers].sum() )
 #  Add combined counts by scenario
 #
 
-depths = ['2','4','6']
+depths = ['2','4']
 
 for d in depths:
     low = f'FL_MFL2_low_{d}ft'

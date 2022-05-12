@@ -4,13 +4,14 @@
 Created on Thu May  5 10:08:07 2022
 
 @author: sofia
+Scripts to keep for reference later 
 """
 
 import pandas as pd
 import geopandas as gpd
 import matplotlib.pyplot as plt
 import os
-
+import fiona
 
 #%% other columns commented out
 
