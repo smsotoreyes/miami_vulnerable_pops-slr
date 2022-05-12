@@ -38,8 +38,7 @@ for r in layers:
     merged = merged.drop_duplicates()
     merged['geometry'] = merged['geometry'].centroid
     merged.to_file(out_file, layer=r, index=False)
-    
-    
-    
+
+#%%
 
 

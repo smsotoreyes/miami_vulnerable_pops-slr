@@ -11,10 +11,16 @@ import geopandas as gpd
 import matplotlib.pyplot as plt
 
 #%% gpkg tracts
+## understanding columns in SVI index
+
 raw = gpd.read_file("Florida_TRACTS.zip")
 miami = raw.query("STCNTY =='12086'")
-miami.to_file("miami.gpkg", layer = 'tracts', index=False)
 print("\nColumns:", list(miami.columns))
+
+#%% SVI layers
+
+## selecting flag layers for further analysis determined by relevance for MDC
+
 
 var_list = ['F_POV', 'F_UNEMP', 'F_PCI', 'F_NOHSDP', 'F_THEME1', 
             'F_AGE65', 'F_AGE17', 'F_DISABL', 'F_SNGPNT', 'F_THEME2', 'F_MINRTY', 
@@ -22,6 +28,7 @@ var_list = ['F_POV', 'F_UNEMP', 'F_PCI', 'F_NOHSDP', 'F_THEME1',
             'F_GROUPQ', 'F_THEME4', 'F_TOTAL', 'E_UNINSUR', 'M_UNINSUR', 
             'EP_UNINSUR', 'MP_UNINSUR', 'E_DAYPOP',]
 miami = miami.replace(-999, None)
+
 for v in var_list:
     if not v.startswith("F_"):
         continue
@@ -35,24 +42,23 @@ for v in var_list:
     fig.suptitle(v)
     fig.tight_layout()
     fig.savefig(f"{v}.png")
+    
+#%% flag prefs
+
+## creating geopackage layer of chosen vulnerability indicators (eliminated high occupancy buildings (multiunit)
+## and limited english (limeng)
+
+flag_list = ['F_THEME1',
+             'F_THEME2',
+             'F_MINRTY',
+             'F_MOBILE','F_CROWD','F_NOVEH','F_GROUPQ']
+
+miami['flag_pref'] = miami[flag_list].sum(axis='columns')
+miami.to_file("miami.gpkg", layer = 'tracts', index=False)
 
 
 
-#%% 
 
 
-limeng = miami[['E_LIMENG','M_LIMENG']]
-limeng['est']=limeng['E_LIMENG']
-limeng['low']=limeng['est']-limeng['M_LIMENG']
-limeng['high']=limeng['est']+limeng['M_LIMENG']
-limeng = limeng.sort_values('est')
-limeng = limeng.reset_index()
-limeng[['est','low','high']].plot.line()
 
-#%%
-
-for v in var_list:
-    if not v.startswith("F_"):
-        continue
-    flags = miami
 

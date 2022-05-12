@@ -15,6 +15,7 @@ import fiona
 
 #%% dade
 
+##unstacking columns in raw NOAA slr data 
 
 dist = 'FL_MFL_slr_data_dist/FL_MFL_slr_final_dist.gdb'
 
@@ -37,11 +38,12 @@ slr_list = ['FL_MFL1_low_0ft', 'FL_MFL1_low_10ft', 'FL_MFL1_low_1ft',
              'FL_MFL2_slr_5ft', 'FL_MFL2_slr_6ft', 'FL_MFL2_slr_7ft', 
              'FL_MFL2_slr_8ft', 'FL_MFL2_slr_9ft']
 
-#%% flood layers >> pull out layers
+#%% flood layers
+
+## creating geopackage of relevant layers for analysis 
 
 runs = ['FL_MFL2_low_2ft', 'FL_MFL2_slr_2ft',
-        'FL_MFL2_low_4ft', 'FL_MFL2_slr_4ft',
-        'FL_MFL2_low_6ft', 'FL_MFL2_slr_6ft']
+        'FL_MFL2_low_4ft', 'FL_MFL2_slr_4ft',]
 
 for r in runs:
     scenario = gpd.read_file(dist, layer=r)

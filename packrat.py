@@ -6,6 +6,12 @@ Created on Thu May  5 10:08:07 2022
 @author: sofia
 """
 
+import pandas as pd
+import geopandas as gpd
+import matplotlib.pyplot as plt
+import os
+
+
 #%% other columns commented out
 
 ## 'E_TOTPOP', 'M_TOTPOP', 'E_HU', 'M_HU', 'E_HH', 'M_HH', 'E_POV', 
@@ -53,10 +59,6 @@ Created on Thu May  5 10:08:07 2022
 
 #%% centroids
 
-import pandas as pd
-import geopandas as gpd
-import matplotlib.pyplot as plt
-import os
 
 tracts = gpd.read_file("joined.gpkg",layer="slr2")
 
@@ -66,3 +68,38 @@ centroids = centroids.dropna(subset=["flood"])
 centroids.to_file("joined.gpkg",layer='centroids_slr2',index=False)
 
 
+#%% ajunct variables (uninsured)
+
+uninsured = miami[['E_UNINSUR','M_UNINSUR']]
+uninsured['est'] = uninsured['E_UNINSUR']
+uninsured['low']= uninsured['est']-uninsured['M_UNINSUR']
+uninsured['high']= uninsured['est']+uninsured['M_UNINSUR']
+uninsured = uninsured.sort_values('est')
+uninsured = uninsured.reset_index()
+uninsured[['low','high','est']].plot.line()
+
+#%% gpkg tracts
+raw = gpd.read_file("Florida_TRACTS.zip")
+miami = raw.query("STCNTY =='12086'")
+miami.to_file("miami.gpkg", layer = 'tracts', index=False)
+print("\nColumns:", list(miami.columns))
+
+#%% cool graph
+
+limeng = miami[['E_LIMENG','M_LIMENG']]
+limeng['est']=limeng['E_LIMENG']
+limeng['low']=limeng['est']-limeng['M_LIMENG']
+limeng['high']=limeng['est']+limeng['M_LIMENG']
+limeng = limeng.sort_values('est')
+limeng = limeng.reset_index()
+limeng[['est','low','high']].plot.line()
+
+#%% uninsured 
+
+uninsured = miami[['E_UNINSUR','M_UNINSUR']]
+uninsured['est'] = uninsured['E_UNINSUR']
+uninsured['low']= uninsured['est']-uninsured['M_UNINSUR']
+uninsured['high']= uninsured['est']+uninsured['M_UNINSUR']
+uninsured = uninsured.sort_values('est')
+uninsured = uninsured.reset_index()
+uninsured[['low','high','est']].plot.line()
